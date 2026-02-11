@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { LoginUserChurchInterface, PersonInterface, UserContextInterface, UserInterface } from "./helpers";
 
 const UserContext = React.createContext<UserContextInterface | undefined>(undefined);
@@ -22,7 +22,7 @@ export const UserProvider = ({ children }: Props) => {
     setUserChurches,
     person,
     setPerson
-  }}>{children} </UserContext.Provider>
+  }}>{children} </UserContext.Provider>;
 };
 
 export default UserContext;

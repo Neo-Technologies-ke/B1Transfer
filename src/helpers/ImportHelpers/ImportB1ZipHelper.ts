@@ -34,7 +34,7 @@ const readB1Zip = async (file: File): Promise<ImportDataInterface> => {
   const zip = await JSZip.loadAsync(file);
 
   zip.files["people.csv"] && loadPeople(UploadHelper.readCsvString(await zip.file("people.csv").async("string")), zip);
-  let tmpServiceTimes = zip.files["services.csv"] && loadServiceTimes(UploadHelper.readCsvString(await zip.file("services.csv").async("string")));
+  const tmpServiceTimes = zip.files["services.csv"] && loadServiceTimes(UploadHelper.readCsvString(await zip.file("services.csv").async("string")));
   zip.files["groups.csv"] && loadGroups(UploadHelper.readCsvString(await zip.file("groups.csv").async("string")));
   zip.files["groupmembers.csv"] && loadGroupMembers(UploadHelper.readCsvString(await zip.file("groupmembers.csv").async("string")));
   zip.files["attendance.csv"] && loadAttendance(UploadHelper.readCsvString(await zip.file("attendance.csv").async("string")), tmpServiceTimes);
@@ -66,101 +66,129 @@ const readB1Zip = async (file: File): Promise<ImportDataInterface> => {
     answers: answers
   } as ImportDataInterface;
 
-}
+};
 
 const loadAnswers = (data: any) => {
   answers = [];
-  for (let i = 0; i < data.length; i++) if (data[i].value !== undefined) {
-    answers.push(data[i]);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].value !== undefined) {
+      answers.push(data[i]);
+    }
   }
-}
+};
 
 const loadFormSubmissions = (data: any) => {
   formSubmissions = [];
-  for (let i = 0; i < data.length; i++) if (data[i].personKey !== undefined) {
-    formSubmissions.push(data[i]);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].personKey !== undefined) {
+      formSubmissions.push(data[i]);
+    }
   }
-}
+};
 
 const loadQuestions = (data: any) => {
   questions = [];
-  for (let i = 0; i < data.length; i++) if (data[i].title !== undefined) {
-    questions.push(data[i]);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].title !== undefined) {
+      questions.push(data[i]);
+    }
   }
-}
+};
 
 const loadForms = (data: any) => {
   forms = [];
-  for (let i = 0; i < data.length; i++) if (data[i].name !== undefined) {
-    forms.push(data[i]);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].name !== undefined) {
+      forms.push(data[i]);
+    }
   }
-}
+};
 
 const loadDonations = (data: any) => {
   batches = [];
   funds = [];
   donations = [];
   fundDonations = [];
-  for (let i = 0; i < data.length; i++) if (data[i].amount !== undefined) {
-    let d = data[i];
-    let batch = ImportHelper.getOrCreateBatch(batches, d.batch, new Date(d.date));
-    let fund = ImportHelper.getOrCreateFund(funds, d.fund);
-    let donation = { importKey: (donations.length + 1).toString(), batchKey: batch.importKey, personKey: d.personKey, personId: d.personKey, donationDate: new Date(d.date), amount: Number.parseFloat(d.amount), method: d.method, methodDetails: d.methodDetails, notes: d.notes, fund: fund, fundKey: fund.importKey } as ImportDonationInterface;
-    let fundDonation = { donationKey: donation.importKey, fundKey: fund.importKey, amount: Number.parseFloat(d.amount) } as ImportFundDonationInterface;
-    let donationPerson = people.find(p => p.importKey === donation.personKey);
-    if (donationPerson) donation.person = donationPerson;
-    donations.push(donation);
-    fundDonations.push(fundDonation);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].amount !== undefined) {
+      const d = data[i];
+      const batch = ImportHelper.getOrCreateBatch(batches, d.batch, new Date(d.date));
+      const fund = ImportHelper.getOrCreateFund(funds, d.fund);
+      const donation = {
+        importKey: (donations.length + 1).toString(),
+        batchKey: batch.importKey,
+        personKey: d.personKey,
+        personId: d.personKey,
+        donationDate: new Date(d.date),
+        amount: Number.parseFloat(d.amount),
+        method: d.method,
+        methodDetails: d.methodDetails,
+        notes: d.notes,
+        fund: fund,
+        fundKey: fund.importKey
+      } as ImportDonationInterface;
+      const fundDonation = { donationKey: donation.importKey, fundKey: fund.importKey, amount: Number.parseFloat(d.amount) } as ImportFundDonationInterface;
+      const donationPerson = people.find(p => p.importKey === donation.personKey);
+      if (donationPerson) donation.person = donationPerson;
+      donations.push(donation);
+      fundDonations.push(fundDonation);
+    }
   }
-}
+};
 
 const loadAttendance = (data: any, tmpServiceTimes: ImportServiceTimeInterface[]) => {
   sessions = [];
   visits = [];
   visitSessions = [];
-  for (let i = 0; i < data.length; i++) if (data[i].personKey !== undefined && data[i].groupKey !== undefined) {
-    let session = ImportHelper.getOrCreateSession(sessions, new Date(data[i].date), data[i].groupKey, data[i].serviceTimeKey);
-    let visit = ImportHelper.getOrCreateVisit(visits, data[i], tmpServiceTimes);
-    let visitSession = { visitKey: visit.importKey, sessionKey: session.importKey } as ImportVisitSessionInterface;
-    visitSessions.push(visitSession);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].personKey !== undefined && data[i].groupKey !== undefined) {
+      const session = ImportHelper.getOrCreateSession(sessions, new Date(data[i].date), data[i].groupKey, data[i].serviceTimeKey);
+      const visit = ImportHelper.getOrCreateVisit(visits, data[i], tmpServiceTimes);
+      const visitSession = { visitKey: visit.importKey, sessionKey: session.importKey } as ImportVisitSessionInterface;
+      visitSessions.push(visitSession);
 
-    let group = groups.find(group => group.importKey === data[i].groupKey);
-    if (group !== null && group.serviceTimeKey !== undefined && group.serviceTimeKey !== null) {
-      let gst = { groupKey: group.importKey, groupId: group.importKey, serviceTimeKey: group.serviceTimeKey } as ImportGroupServiceTimeInterface;
-      if (groupServiceTimes.find(gst => gst.groupKey === group.importKey && gst.serviceTimeKey === group.serviceTimeKey) === undefined) groupServiceTimes.push(gst);
+      const group = groups.find(group => group.importKey === data[i].groupKey);
+      if (group !== null && group.serviceTimeKey !== undefined && group.serviceTimeKey !== null) {
+        const gst = { groupKey: group.importKey, groupId: group.importKey, serviceTimeKey: group.serviceTimeKey } as ImportGroupServiceTimeInterface;
+        if (groupServiceTimes.find(gst => gst.groupKey === group.importKey && gst.serviceTimeKey === group.serviceTimeKey) === undefined) groupServiceTimes.push(gst);
+      }
     }
   }
-}
+};
 
 const loadServiceTimes = (data: any) => {
   campuses = [];
   services = [];
   serviceTimes = [];
-  for (let i = 0; i < data.length; i++) if (data[i].time !== undefined) {
-    let campus = ImportHelper.getOrCreateCampus(campuses, data[i].campus);
-    let service = ImportHelper.getOrCreateService(services, data[i].service, campus);
-    ImportHelper.getOrCreateServiceTime(serviceTimes, data[i], service);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].time !== undefined) {
+      const campus = ImportHelper.getOrCreateCampus(campuses, data[i].campus);
+      const service = ImportHelper.getOrCreateService(services, data[i].service, campus);
+      ImportHelper.getOrCreateServiceTime(serviceTimes, data[i], service);
+    }
   }
   return serviceTimes;
-}
+};
 
 const loadGroups = (data: any) => {
   groups = [];
   groupServiceTimes = [];
-  for (let i = 0; i < data.length; i++) if (data[i].name !== undefined) {
-    let group = ImportHelper.getOrCreateGroup(groups, data[i]);
-    if (group !== null && group.serviceTimeKey !== undefined && group.serviceTimeKey !== null) {
-      let gst = { groupKey: group.importKey, groupId: group.importKey, serviceTimeKey: group.serviceTimeKey } as ImportGroupServiceTimeInterface;
-      groupServiceTimes.push(gst);
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].name !== undefined) {
+      const group = ImportHelper.getOrCreateGroup(groups, data[i]);
+      if (group !== null && group.serviceTimeKey !== undefined && group.serviceTimeKey !== null) {
+        const gst = { groupKey: group.importKey, groupId: group.importKey, serviceTimeKey: group.serviceTimeKey } as ImportGroupServiceTimeInterface;
+        groupServiceTimes.push(gst);
+      }
     }
   }
   return groups;
-}
+};
 
 const loadGroupMembers = (data: any) => {
   groupMembers = [];
   for (let i = 0; i < data.length; i++) if (data[i].groupKey !== undefined) groupMembers.push(data[i] as ImportGroupMemberInterface);
-}
+};
 
 const loadPeople = (data: any, zip: any) => {
   people = [];
@@ -168,8 +196,8 @@ const loadPeople = (data: any, zip: any) => {
   for (let i = 0; i < data.length; i++) {
     if (data[i].lastName !== undefined) {
       const p = data[i] as ImportPersonInterface;
-      p.name = { first: data[i].firstName ?? "", last: data[i].lastName ?? "", middle: data[i].middleName ?? "", nick: data[i].nickName ?? "", display: data[i].displayName ?? "" }
-      p.contactInfo = { address1: data[i].address1 ?? "", address2: data[i].address2 ?? "", city: data[i].city ?? "", state: data[i].state ?? "", zip: data[i].zip ?? "", homePhone: data[i].homePhone ?? "", workPhone: data[i].workPhone ?? "", email: data[i].email ?? "" }
+      p.name = { first: data[i].firstName ?? "", last: data[i].lastName ?? "", middle: data[i].middleName ?? "", nick: data[i].nickName ?? "", display: data[i].displayName ?? "" };
+      p.contactInfo = { address1: data[i].address1 ?? "", address2: data[i].address2 ?? "", city: data[i].city ?? "", state: data[i].state ?? "", zip: data[i].zip ?? "", homePhone: data[i].homePhone ?? "", workPhone: data[i].workPhone ?? "", email: data[i].email ?? "" };
       assignHousehold(households, data[i]);
       if (p.photo !== undefined) {
         zip?.file(p.photo)?.async("base64").then((data: any) => {
@@ -182,14 +210,14 @@ const loadPeople = (data: any, zip: any) => {
     }
   }
   return people;
-}
+};
 
 const assignHousehold = (households: ImportHouseholdInterface[], person: any) => {
-  let householdName: string = person.householdName;
+  const householdName: string = person.householdName;
   if (households.length === 0 || households[households.length - 1].name !== householdName) {
     households.push({ name: householdName, importKey: (households.length + 1).toString() } as ImportHouseholdInterface);
   }
   person.householdKey = households[households.length - 1].importKey;
-}
+};
 
 export default readB1Zip;

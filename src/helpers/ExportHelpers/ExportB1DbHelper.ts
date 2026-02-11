@@ -43,7 +43,7 @@ const postInBatches = async <T extends { id?: string }>(
 
 const exportToB1Db = async (exportData: ImportDataInterface, updateProgress: (name: string, status: string) => void) => {
 
-  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
+  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
   const runImport = async (keyName: string, code: () => void, skipComplete = false) => {
     updateProgress(keyName, "running");
@@ -54,24 +54,24 @@ const exportToB1Db = async (exportData: ImportDataInterface, updateProgress: (na
         updateProgress(keyName, "complete");
       }
     } catch (e) {
-      if (e instanceof Error && e.message.includes("Unauthorized")) alert("Please log in to access B1 data")
+      if (e instanceof Error && e.message.includes("Unauthorized")) alert("Please log in to access B1 data");
       updateProgress(keyName, "error");
-      throw (e)
+      throw (e);
     }
-  }
+  };
 
-  let campusResult = await exportCampuses(exportData, runImport);
-  let tmpPeople = await exportPeople(exportData, runImport, updateProgress);
-  let tmpGroups = await exportGroups(exportData, tmpPeople, campusResult.serviceTimes, runImport, updateProgress);
+  const campusResult = await exportCampuses(exportData, runImport);
+  const tmpPeople = await exportPeople(exportData, runImport, updateProgress);
+  const tmpGroups = await exportGroups(exportData, tmpPeople, campusResult.serviceTimes, runImport, updateProgress);
   await exportAttendance(exportData, tmpPeople, tmpGroups, campusResult.services, campusResult.serviceTimes, runImport, updateProgress);
   await exportDonations(exportData, tmpPeople, runImport, updateProgress);
   await exportForms(exportData, tmpPeople, runImport);
-}
+};
 
 const exportCampuses = async (exportData: ImportDataInterface, runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>) => {
-  let tmpCampuses: ImportCampusInterface[] = [...exportData.campuses];
-  let tmpServices: ImportServiceInterface[] = [...exportData.services];
-  let tmpServiceTimes: ImportServiceTimeInterface[] = [...exportData.serviceTimes];
+  const tmpCampuses: ImportCampusInterface[] = [...exportData.campuses];
+  const tmpServices: ImportServiceInterface[] = [...exportData.services];
+  const tmpServiceTimes: ImportServiceTimeInterface[] = [...exportData.serviceTimes];
 
   await runImport("Campuses/Services/Times", async () => {
     if (tmpCampuses.length > 0) {
@@ -79,21 +79,21 @@ const exportCampuses = async (exportData: ImportDataInterface, runImport: (keyNa
     }
 
     if (tmpServices.length > 0) {
-      tmpServices.forEach((s) => { s.campusId = ImportHelper.getByImportKey(tmpCampuses, s.campusKey).id });
+      tmpServices.forEach((s) => { s.campusId = ImportHelper.getByImportKey(tmpCampuses, s.campusKey).id; });
       await postInBatches("/services", tmpServices, "AttendanceApi");
     }
 
     if (tmpServiceTimes.length > 0) {
-      tmpServiceTimes.forEach((st) => { st.serviceId = ImportHelper.getByImportKey(tmpServices, st.serviceKey).id });
+      tmpServiceTimes.forEach((st) => { st.serviceId = ImportHelper.getByImportKey(tmpServices, st.serviceKey).id; });
       await postInBatches("/servicetimes", tmpServiceTimes, "AttendanceApi");
     }
   });
   return { campuses: tmpCampuses, services: tmpServices, serviceTimes: tmpServiceTimes };
-}
+};
 
 const exportPeople = async (exportData: ImportDataInterface, runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>, updateProgress: (name: string, status: string) => void) => {
-  let tmpPeople: ImportPersonInterface[] = [...exportData.people];
-  let tmpHouseholds: ImportHouseholdInterface[] = [...exportData.households];
+  const tmpPeople: ImportPersonInterface[] = [...exportData.people];
+  const tmpHouseholds: ImportHouseholdInterface[] = [...exportData.households];
 
   tmpPeople.forEach((p) => {
     if (p.birthDate !== undefined) p.birthDate = new Date(p.birthDate);
@@ -128,12 +128,18 @@ const exportPeople = async (exportData: ImportDataInterface, runImport: (keyName
   });
 
   return tmpPeople;
-}
+};
 
-const exportGroups = async (exportData: ImportDataInterface, tmpPeople: ImportPersonInterface[], tmpServiceTimes: ImportServiceTimeInterface[], runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>, updateProgress: (name: string, status: string) => void) => {
-  let tmpGroups: ImportGroupInterface[] = [...exportData.groups];
-  let tmpTimes: ImportGroupServiceTimeInterface[] = [...exportData.groupServiceTimes];
-  let tmpMembers: ImportGroupMemberInterface[] = [...exportData.groupMembers];
+const exportGroups = async (
+  exportData: ImportDataInterface,
+  tmpPeople: ImportPersonInterface[],
+  tmpServiceTimes: ImportServiceTimeInterface[],
+  runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>,
+  updateProgress: (name: string, status: string) => void
+) => {
+  const tmpGroups: ImportGroupInterface[] = [...exportData.groups];
+  const tmpTimes: ImportGroupServiceTimeInterface[] = [...exportData.groupServiceTimes];
+  const tmpMembers: ImportGroupMemberInterface[] = [...exportData.groupMembers];
 
   await runImport("Groups", async () => {
     if (tmpGroups.length > 0) {
@@ -144,8 +150,8 @@ const exportGroups = async (exportData: ImportDataInterface, tmpPeople: ImportPe
   await runImport("Group Service Times", async () => {
     if (tmpTimes.length > 0) {
       tmpTimes.forEach((gst) => {
-        gst.groupId = ImportHelper.getByImportKey(tmpGroups, gst.groupKey).id
-        gst.serviceTimeId = ImportHelper.getByImportKey(tmpServiceTimes, gst.serviceTimeKey).id
+        gst.groupId = ImportHelper.getByImportKey(tmpGroups, gst.groupKey).id;
+        gst.serviceTimeId = ImportHelper.getByImportKey(tmpServiceTimes, gst.serviceTimeKey).id;
       });
       await postInBatches("/groupservicetimes", tmpTimes, "AttendanceApi");
     }
@@ -154,8 +160,8 @@ const exportGroups = async (exportData: ImportDataInterface, tmpPeople: ImportPe
   await runImport("Group Members", async () => {
     if (tmpMembers.length > 0) {
       tmpMembers.forEach((gm) => {
-        gm.groupId = ImportHelper.getByImportKey(tmpGroups, gm.groupKey)?.id
-        gm.personId = ImportHelper.getByImportKey(tmpPeople, gm.personKey)?.id
+        gm.groupId = ImportHelper.getByImportKey(tmpGroups, gm.groupKey)?.id;
+        gm.personId = ImportHelper.getByImportKey(tmpPeople, gm.personKey)?.id;
       });
       await postInBatches("/groupmembers", tmpMembers, "MembershipApi", (_current, _total, isComplete) => {
         if (isComplete) {
@@ -170,39 +176,39 @@ const exportGroups = async (exportData: ImportDataInterface, tmpPeople: ImportPe
   }, true);
 
   return tmpGroups;
-}
+};
 
 const exportForms = async (exportData: ImportDataInterface, tmpPeople: ImportPersonInterface[], runImport: (keyName: string, code: () => void) => Promise<void>) => {
-  let tmpForms: ImportFormsInterface[] = [...exportData.forms];
-  let tmpQuestions: ImportQuestionsInterface[] = [...exportData.questions];
-  let tmpFormSubmissions: ImportFormSubmissions[] = [...exportData.formSubmissions];
-  let tmpAnswers: ImportAnswerInterface[] = [...exportData.answers];
+  const tmpForms: ImportFormsInterface[] = [...exportData.forms];
+  const tmpQuestions: ImportQuestionsInterface[] = [...exportData.questions];
+  const tmpFormSubmissions: ImportFormSubmissions[] = [...exportData.formSubmissions];
+  const tmpAnswers: ImportAnswerInterface[] = [...exportData.answers];
 
   await runImport("Forms", async () => {
     if (tmpForms.length > 0) {
-      await postInBatches("/forms", tmpForms, "MembershipApi")
+      await postInBatches("/forms", tmpForms, "MembershipApi");
     }
-  })
+  });
 
   await runImport("Questions", async () => {
     if (tmpQuestions.length > 0) {
       tmpQuestions.forEach(q => {
         q.formId = ImportHelper.getByImportKey(tmpForms, q.formKey).id;
-      })
+      });
       // Update with formId qs
-      await postInBatches("/questions", tmpQuestions, "MembershipApi")
+      await postInBatches("/questions", tmpQuestions, "MembershipApi");
     }
-  })
+  });
 
   await runImport("Answers", async () => {
     if (tmpFormSubmissions.length > 0) {
       tmpFormSubmissions.forEach(fs => {
-        let formId = ImportHelper.getByImportKey(tmpForms, fs.formKey).id;;
+        const formId = ImportHelper.getByImportKey(tmpForms, fs.formKey).id;;
         fs.formId = formId;
         fs.contentId = ImportHelper.getByImportKey(tmpPeople, fs.personKey).id;
 
-        let questions: any[] = [];
-        let answers: any[] = [];
+        const questions: any[] = [];
+        const answers: any[] = [];
         tmpQuestions.forEach(q => {
           if (q.formId === formId) {
             questions.push(q);
@@ -211,27 +217,27 @@ const exportForms = async (exportData: ImportDataInterface, tmpPeople: ImportPer
               if (a.questionKey === q.questionKey) {
                 answers.push({ questionId: q.id, value: a.value });
               }
-            })
+            });
 
           }
-        })
+        });
         fs.questions = questions;
         fs.answers = answers;
-      })
+      });
 
     }
-  })
+  });
   await runImport("Form Submissions", async () => {
     if (tmpFormSubmissions.length > 0) {
-      await postInBatches("/formsubmissions", tmpFormSubmissions, "MembershipApi")
+      await postInBatches("/formsubmissions", tmpFormSubmissions, "MembershipApi");
     }
-  })
-}
+  });
+};
 
 const exportDonations = async (exportData: ImportDataInterface, tmpPeople: ImportPersonInterface[], runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>, updateProgress: (name: string, status: string) => void) => {
-  let tmpFunds: ImportFundInterface[] = [...exportData.funds];
-  let tmpBatches: ImportDonationBatchInterface[] = [...exportData.batches];
-  let tmpDonations: ImportDonationInterface[] = [...exportData.donations];
+  const tmpFunds: ImportFundInterface[] = [...exportData.funds];
+  const tmpBatches: ImportDonationBatchInterface[] = [...exportData.batches];
+  const tmpDonations: ImportDonationInterface[] = [...exportData.donations];
 
   await runImport("Funds", async () => {
     await postInBatches("/funds", tmpFunds, "GivingApi");
@@ -263,7 +269,7 @@ const exportDonations = async (exportData: ImportDataInterface, tmpPeople: Impor
   }, true);
 
   await runImport("Donation Funds", async () => {
-    let tmpFundDonations: ImportFundDonationInterface[] = [...exportData.fundDonations];
+    const tmpFundDonations: ImportFundDonationInterface[] = [...exportData.fundDonations];
     if (tmpFundDonations.length > 0) {
       tmpFundDonations.forEach((fd) => {
         fd.donationId = ImportHelper.getByImportKey(tmpDonations, fd.donationKey).id;
@@ -280,11 +286,19 @@ const exportDonations = async (exportData: ImportDataInterface, tmpPeople: Impor
       updateProgress("Donations", "complete");
     }
   }, true);
-}
+};
 
-const exportAttendance = async (exportData: ImportDataInterface, tmpPeople: ImportPersonInterface[], tmpGroups: ImportGroupInterface[], tmpServices: ImportServiceInterface[], tmpServiceTimes: ImportServiceTimeInterface[], runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>, updateProgress: (name: string, status: string) => void) => {
-  let tmpSessions: ImportSessionInterface[] = [...exportData.sessions];
-  let tmpVisits: ImportVisitInterface[] = [...exportData.visits];
+const exportAttendance = async (
+  exportData: ImportDataInterface,
+  tmpPeople: ImportPersonInterface[],
+  tmpGroups: ImportGroupInterface[],
+  tmpServices: ImportServiceInterface[],
+  tmpServiceTimes: ImportServiceTimeInterface[],
+  runImport: (keyName: string, code: () => void, skipComplete?: boolean) => Promise<void>,
+  updateProgress: (name: string, status: string) => void
+) => {
+  const tmpSessions: ImportSessionInterface[] = [...exportData.sessions];
+  const tmpVisits: ImportVisitInterface[] = [...exportData.visits];
   await runImport("Attendance", async () => {
     if (tmpSessions.length > 0) {
       tmpSessions.forEach((s) => {
@@ -316,7 +330,7 @@ const exportAttendance = async (exportData: ImportDataInterface, tmpPeople: Impo
       });
     }
 
-    let tmpVisitSessions: ImportVisitSessionInterface[] = [...exportData.visitSessions];
+    const tmpVisitSessions: ImportVisitSessionInterface[] = [...exportData.visitSessions];
     if (tmpVisitSessions.length > 0 && tmpVisits.length > 0) {
       tmpVisitSessions.forEach((vs) => {
         vs.visitId = ImportHelper.getByImportKey(tmpVisits, vs.visitKey).id;
@@ -333,6 +347,6 @@ const exportAttendance = async (exportData: ImportDataInterface, tmpPeople: Impo
       updateProgress("Attendance", "complete");
     }
   }, true);
-}
+};
 
 export default exportToB1Db;

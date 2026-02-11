@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Login } from "./Login"
+import { Login } from "./Login";
 
 export const Unauthenticated = () => (
   <>
@@ -8,4 +8,4 @@ export const Unauthenticated = () => (
       <Route path="/" element={<Navigate to="/login" />} />
     </Routes>
   </>
-)
+);

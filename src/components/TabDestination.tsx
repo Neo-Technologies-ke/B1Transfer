@@ -1,13 +1,13 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { Select, MenuItem, FormControl, InputLabel, Box, Typography, Button, Alert, Link } from "@mui/material";
 import { ImportDataInterface } from "../helpers/ImportHelper";
 import { DataSourceType } from "../types";
 import UserContext from "../UserContext";
-import getB1Data from "../helpers/ImportHelpers/ImportB1DbHelper"
-import generateBreezeZip from "../helpers/ExportHelpers/ExportBreezeZipHelper"
-import generateB1Zip from "../helpers/ExportHelpers/ExportB1ZipHelper"
-import exportToB1Db from "../helpers/ExportHelpers/ExportB1DbHelper"
-import generatePlanningCenterZip from "../helpers/ExportHelpers/ExportPlanningCenterZipHelper"
+import getB1Data from "../helpers/ImportHelpers/ImportB1DbHelper";
+import generateBreezeZip from "../helpers/ExportHelpers/ExportBreezeZipHelper";
+import generateB1Zip from "../helpers/ExportHelpers/ExportB1ZipHelper";
+import exportToB1Db from "../helpers/ExportHelpers/ExportB1DbHelper";
+import generatePlanningCenterZip from "../helpers/ExportHelpers/ExportPlanningCenterZipHelper";
 import { FinalCountPreview } from "./FinalCountPreview";
 
 interface Props {
@@ -26,17 +26,17 @@ export const TabDestination = (props: Props) => {
   const context = React.useContext(UserContext);
   const [b1Data, setB1Data] = useState<ImportDataInterface>();
   const [loginError, setLoginError] = useState<boolean>(false);
-  let progress: any = {};
+  const progress: any = {};
 
   const setProgress = (name: string, status: string) => {
     progress[name] = status;
     props.setStatus({ ...progress });
-  }
+  };
 
   const getB1DBData = async () => {
     const data = await getB1Data();
     setB1Data(data);
-  }
+  };
 
   const handleSelect = (e: string) => {
     setLoginError(false);
@@ -52,31 +52,31 @@ export const TabDestination = (props: Props) => {
       props.setShowFinalCount(false);
       handleExport(e);
     }
-  }
+  };
 
   const handleExport = async (e: string) => {
-    props.setDataExportSource(e)
+    props.setDataExportSource(e);
     if (e === props.dataImportSource) {
-      alert("Export source must be different than import source to avoid duplication of data")
+      alert("Export source must be different than import source to avoid duplication of data");
       return;
     } else {
-      props.setIsExporting(true)
-      props.setActiveTab("step4")
+      props.setIsExporting(true);
+      props.setActiveTab("step4");
       switch (e) {
         case DataSourceType.B1_DB: {
-          await exportToB1Db(props.importData, setProgress)
+          await exportToB1Db(props.importData, setProgress);
           break;
         }
         case DataSourceType.B1_ZIP: {
-          await generateB1Zip(props.importData, setProgress)
+          await generateB1Zip(props.importData, setProgress);
           break;
         }
         case DataSourceType.BREEZE_ZIP: {
-          generateBreezeZip(props.importData, setProgress)
+          generateBreezeZip(props.importData, setProgress);
           break;
         }
         case DataSourceType.PLANNING_CENTER_ZIP: {
-          generatePlanningCenterZip(props.importData, setProgress)
+          generatePlanningCenterZip(props.importData, setProgress);
           break;
         }
         default: {
@@ -88,7 +88,7 @@ export const TabDestination = (props: Props) => {
 
   return (
     <Box>
-      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'primary.main', mb: 3 }}>
+      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: "primary.main", mb: 3 }}>
         Step 3 - Choose Export Destination
       </Typography>
       <Typography variant="body1" paragraph>
@@ -97,10 +97,10 @@ export const TabDestination = (props: Props) => {
 
       {loginError && (
         <Alert severity="error" sx={{ mb: 2, maxWidth: 500 }}>
-          You must be logged in to use B1 Database as a destination. Please{' '}
-          <Link href="/login" sx={{ color: 'inherit', fontWeight: 'bold', textDecoration: 'underline' }}>
+          You must be logged in to use B1 Database as a destination. Please{" "}
+          <Link href="/login" sx={{ color: "inherit", fontWeight: "bold", textDecoration: "underline" }}>
             log in
-          </Link>{' '}
+          </Link>{" "}
           first.
         </Alert>
       )}
@@ -109,7 +109,7 @@ export const TabDestination = (props: Props) => {
         <InputLabel id="export-destination-select-label">Export Destination</InputLabel>
         <Select
           labelId="export-destination-select-label"
-          value={props.dataExportSource || ''}
+          value={props.dataExportSource || ""}
           label="Export Destination"
           onChange={(e) => handleSelect(e.target.value)}
         >
@@ -123,12 +123,12 @@ export const TabDestination = (props: Props) => {
       {props.showFinalCount && props.importData && b1Data && (
         <Box sx={{ mt: 3 }}>
           <FinalCountPreview importData={props.importData} b1Data={b1Data} />
-          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
             <Button
               variant="contained"
               color="success"
               onClick={() => handleExport(DataSourceType.B1_DB)}
-              sx={{ textTransform: 'none', borderRadius: 2, fontWeight: 600, px: 4 }}
+              sx={{ textTransform: "none", borderRadius: 2, fontWeight: 600, px: 4 }}
             >
               Start Transfer
             </Button>
@@ -136,5 +136,5 @@ export const TabDestination = (props: Props) => {
         </Box>
       )}
     </Box>
-  )
-}
+  );
+};

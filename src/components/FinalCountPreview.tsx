@@ -15,11 +15,11 @@ export const FinalCountPreview = (props: Props) => {
   };
 
   const getRows = () => {
-    let rows: any[] = [];
+    const rows: any[] = [];
     const keys = Object.keys(props.b1Data);
     keys.forEach((key, index) => {
-      let b1Data = props.b1Data[key as keyof ImportDataInterface];
-      let importData = props.importData[key as keyof ImportDataInterface];
+      const b1Data = props.b1Data[key as keyof ImportDataInterface];
+      const importData = props.importData[key as keyof ImportDataInterface];
       const total = b1Data.length + importData.length;
       rows.push(
         <TableRow key={index}>
@@ -34,7 +34,7 @@ export const FinalCountPreview = (props: Props) => {
   };
 
   const getTable = () => (
-    <TableContainer sx={{ bgcolor: 'background.paper', border: 1, borderColor: 'grey.300', borderRadius: 2 }}>
+    <TableContainer sx={{ bgcolor: "background.paper", border: 1, borderColor: "grey.300", borderRadius: 2 }}>
       <Table>
         <TableHead>
           <TableRow>

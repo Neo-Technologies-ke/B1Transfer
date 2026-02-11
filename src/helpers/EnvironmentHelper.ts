@@ -26,10 +26,10 @@ export class EnvironmentHelper {
     ];
 
     await Locale.init([`/locales/{{lng}}.json?v=1`, `/apphelper/locales/{{lng}}.json`]);
-  }
+  };
 
   static initDev = () => {
-    this.initStaging()
+    this.initStaging();
     /*;
     EnvironmentHelper.AttendanceApi = import.meta.env.VITE_ATTENDANCE_API || EnvironmentHelper.AttendanceApi;
     EnvironmentHelper.GivingApi = import.meta.env.VITE_GIVING_API || EnvironmentHelper.GivingApi;
@@ -40,7 +40,7 @@ export class EnvironmentHelper {
 
     //EnvironmentHelper.GoogleAnalyticsTag = import.meta.env.VITE_GOOGLE_ANALYTICS || EnvironmentHelper.GoogleAnalyticsTag;
     //EnvironmentHelper.B1Url = import.meta.env.VITE_B1_URL || EnvironmentHelper.B1Url;
-  }
+  };
 
   //NOTE: None of these values are secret.
   static initStaging = () => {
@@ -51,7 +51,7 @@ export class EnvironmentHelper {
     EnvironmentHelper.ContentRoot = "https://content.staging.churchapps.org";
     EnvironmentHelper.GoogleAnalyticsTag = "";
     EnvironmentHelper.B1Url = "https://app.staging.b1.church";*/
-  }
+  };
 
   //NOTE: None of these values are secret.
   static initProd = () => {
@@ -62,7 +62,7 @@ export class EnvironmentHelper {
     EnvironmentHelper.ContentRoot = "https://content.churchapps.org";
     EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-4";
     EnvironmentHelper.B1Url = "https://app.b1.church";*/
-  }
+  };
 
 }
 

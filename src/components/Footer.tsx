@@ -3,10 +3,10 @@ import { Box, Typography } from "@mui/material";
 
 export const Footer: React.FC = () => (
   <Box sx={{
-    backgroundColor: '#333',
-    color: '#eee',
+    backgroundColor: "#333",
+    color: "#eee",
     py: 5,
-    textAlign: 'center'
+    textAlign: "center"
   }}>
     <img src="/images/logo-footer.png?v=1" alt="logo" style={{ maxWidth: 300, marginBottom: 20 }} />
     <Typography variant="body2">
@@ -16,4 +16,4 @@ export const Footer: React.FC = () => (
       2022 © Live Church Solutions. All rights reserved.
     </Typography>
   </Box>
-)
+);

@@ -62,7 +62,7 @@ export class ImportHelper {
   static getServiceTimes(serviceTimes: ImportServiceTimeInterface[], serviceKey: string) { return ArrayHelper.getAll(serviceTimes, "serviceKey", serviceKey) as ImportServiceTimeInterface[]; }
   static getGroupServiceTimes(groupServiceTimes: ImportGroupServiceTimeInterface[], serviceTimeKey: string) { return ArrayHelper.getAll(groupServiceTimes, "serviceTimeKey", serviceTimeKey) as ImportGroupServiceTimeInterface[]; }
   static getHouseholdMembers(householdKey: string, people: ImportPersonInterface[]) {
-    let result = ArrayHelper.getAll(people, "householdKey", householdKey) as ImportPersonInterface[];
+    const result = ArrayHelper.getAll(people, "householdKey", householdKey) as ImportPersonInterface[];
     return result;
   };
 
@@ -86,20 +86,20 @@ export class ImportHelper {
   }
 
   static getOrCreateVisit(visits: ImportVisitInterface[], data: any, serviceTimes: ImportServiceTimeInterface[]) {
-    let serviceTime: ImportServiceTimeInterface = this.getByImportKey(serviceTimes, data.serviceTimeKey);
-    let serviceKey = (serviceTime === null) ? "" : serviceTime.serviceKey;
+    const serviceTime: ImportServiceTimeInterface = this.getByImportKey(serviceTimes, data.serviceTimeKey);
+    const serviceKey = (serviceTime === null) ? "" : serviceTime.serviceKey;
     for (let i = 0; i < visits.length; i++) {
-      let v = visits[i];
+      const v = visits[i];
       if (v.personKey === data.personKey && v.serviceKey === serviceKey && v.groupKey === data.groupKey && v.visitDate === new Date(data.date)) return v;
     }
-    let result = { importKey: (visits.length + 1).toString(), visitDate: new Date(data.date), personKey: data.personKey, serviceKey: serviceKey, groupKey: data.groupKey } as ImportVisitInterface;
+    const result = { importKey: (visits.length + 1).toString(), visitDate: new Date(data.date), personKey: data.personKey, serviceKey: serviceKey, groupKey: data.groupKey } as ImportVisitInterface;
     visits.push(result);
     return result;
   }
 
   static getOrCreateSession(sessions: ImportSessionInterface[], sessionDate: Date, groupKey: string, serviceTimeKey: string) {
     for (let i = 0; i < sessions.length; i++) if (sessions[i].sessionDate.toString() === sessionDate.toString() && sessions[i].groupKey === groupKey && sessions[i].serviceTimeKey === serviceTimeKey) return sessions[i];
-    let result = { importKey: (sessions.length + 1).toString(), sessionDate: sessionDate, groupKey: groupKey, serviceTimeKey: serviceTimeKey } as ImportSessionInterface;
+    const result = { importKey: (sessions.length + 1).toString(), sessionDate: sessionDate, groupKey: groupKey, serviceTimeKey: serviceTimeKey } as ImportSessionInterface;
     sessions.push(result);
     return result;
   }
@@ -117,7 +117,7 @@ export class ImportHelper {
   static getOrCreateService(services: ImportServiceInterface[], serviceName: string, campus: ImportCampusInterface) {
     if (campus === null || serviceName === undefined || serviceName === null || serviceName === "") return null;
     for (let i = 0; i < services.length; i++) if (services[i].name === serviceName && services[i].campusKey === campus.importKey) return services[i];
-    let result = { name: serviceName, importKey: (services.length + 1).toString(), campusKey: campus.importKey } as ImportServiceInterface;
+    const result = { name: serviceName, importKey: (services.length + 1).toString(), campusKey: campus.importKey } as ImportServiceInterface;
     services.push(result);
     return result;
   }
@@ -126,7 +126,7 @@ export class ImportHelper {
     if (service === null || data.importKey === undefined || data.importKey === null || data.importKey === "") return null;
     let result: ImportServiceTimeInterface = this.getByImportKey(serviceTimes, data.serviceTimeKey);
     if (result === null) {
-      result = { serviceKey: service.importKey, importKey: data.importKey, name: data.time } as ImportServiceTimeInterface
+      result = { serviceKey: service.importKey, importKey: data.importKey, name: data.time } as ImportServiceTimeInterface;
       serviceTimes.push(result);
     }
     return result;

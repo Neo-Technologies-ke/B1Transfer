@@ -13,12 +13,12 @@ interface Props {
 
 export const TabPreview = (props: Props) => {
   const getPreview = () => {
-    if (props.importData) return <ImportPreview triggerRender={1} importData={props.importData} />
-  }
+    if (props.importData) return <ImportPreview triggerRender={1} importData={props.importData} />;
+  };
 
   return (
     <Box>
-      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'primary.main', mb: 3 }}>
+      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: "primary.main", mb: 3 }}>
         Step 2 - Preview
       </Typography>
 
@@ -29,11 +29,11 @@ export const TabPreview = (props: Props) => {
       {props.importData && (
         <Box
           sx={{
-            maxHeight: '60vh',
-            overflowY: 'auto',
+            maxHeight: "60vh",
+            overflowY: "auto",
             mb: 3,
             border: 1,
-            borderColor: 'divider',
+            borderColor: "divider",
             borderRadius: 1
           }}
         >
@@ -42,14 +42,14 @@ export const TabPreview = (props: Props) => {
       )}
 
       {props.importData && (
-        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
           <Button
             onClick={() => props.setActiveTab("step3")}
             variant="contained"
             color="primary"
             size="large"
             sx={{
-              textTransform: 'none',
+              textTransform: "none",
               borderRadius: 2,
               fontWeight: 600,
               px: 4
@@ -60,5 +60,5 @@ export const TabPreview = (props: Props) => {
         </Box>
       )}
     </Box>
-  )
-}
+  );
+};

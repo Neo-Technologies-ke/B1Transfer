@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Box, Typography, Stack } from '@mui/material';
+import React, { ReactNode } from "react";
+import { Box, Typography, Stack } from "@mui/material";
 
 interface PageHeaderProps {
   icon: ReactNode;
@@ -27,17 +27,15 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       <Stack direction="row" spacing={2} alignItems="center" sx={{ flex: 1 }}>
         <Box
           sx={{
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            borderRadius: '12px',
+            backgroundColor: "rgba(255,255,255,0.2)",
+            borderRadius: "12px",
             p: 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
-          {React.cloneElement(icon as React.ReactElement<any>, {
-            sx: { fontSize: 32, color: '#FFF' }
-          })}
+          {React.cloneElement(icon as React.ReactElement<any>, { sx: { fontSize: 32, color: "#FFF" } })}
         </Box>
         <Box sx={{ flex: 1 }}>
           <Typography
@@ -45,8 +43,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             sx={{
               fontWeight: 600,
               mb: 0.5,
-              fontSize: { xs: '1.75rem', md: '2.125rem' },
-              color: '#FFF'
+              fontSize: { xs: "1.75rem", md: "2.125rem" },
+              color: "#FFF"
             }}
           >
             {title}
@@ -55,8 +53,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <Typography
               variant="body1"
               sx={{
-                color: 'rgba(255,255,255,0.9)',
-                fontSize: { xs: '0.875rem', md: '1rem' }
+                color: "rgba(255,255,255,0.9)",
+                fontSize: { xs: "0.875rem", md: "1rem" }
               }}
             >
               {subtitle}
@@ -71,19 +69,17 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           direction="row"
           spacing={3}
           sx={{
-            display: { xs: 'none', md: 'flex' },
+            display: { xs: "none", md: "flex" },
             flexShrink: 0
           }}
         >
           {statistics.map((stat, index) => (
             <Stack key={index} direction="row" spacing={1} alignItems="center">
-              {React.cloneElement(stat.icon as React.ReactElement<any>, {
-                sx: { color: "#FFF", fontSize: 20 }
-              })}
+              {React.cloneElement(stat.icon as React.ReactElement<any>, { sx: { color: "#FFF", fontSize: 20 } })}
               <Typography variant="h6" sx={{ color: "#FFF", fontWeight: 600, mr: 1 }}>
                 {stat.value}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.875rem' }}>
+              <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.9)", fontSize: "0.875rem" }}>
                 {stat.label}
               </Typography>
             </Stack>

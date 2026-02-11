@@ -15,16 +15,17 @@ export const Authenticated: React.FC = () => {
 
   if (UserHelper.churchChanged) {
     UserHelper.churchChanged = false;
-    return <Navigate to="/" />
+    return <Navigate to="/" />;
+  } else {
+    return (
+      <>
+        <Header></Header>
+        <div className="container">
+          <Routes>
+            <Route path="/login" element={<Navigate to={window.location.pathname} />} />
+          </Routes>
+        </div>
+      </>
+    );
   }
-  else return (
-    <>
-      <Header></Header>
-      <div className="container">
-        <Routes>
-          <Route path="/login" element={<Navigate to={window.location.pathname} />} />
-        </Routes>
-      </div>
-    </>
-  );
 };

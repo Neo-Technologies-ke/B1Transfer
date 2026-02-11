@@ -1,62 +1,64 @@
 import Papa from "papaparse";
 import FileSaver from "file-saver";
-import { Buffer } from "buffer"
+import { Buffer } from "buffer";
 import JSZip from "jszip";
 import * as XLSX from "xlsx";
 export class UploadHelper {
 
   static zipFiles(files: { name: string, contents: string | Buffer }[], zipFileName: string) {
-    let zip = new JSZip();
+    const zip = new JSZip();
     files.forEach((f) => {
       if (typeof f.contents === "string") zip.file(f.name, Buffer.alloc(f.contents.length, f.contents));
       else zip.file(f.name, f.contents as Buffer);
     });
     zip.generateAsync({ type: "blob" }).then(content => {
       FileSaver.saveAs(content, zipFileName);
-    })
+    });
   }
 
   static downloadImageBytes(files: { name: string, contents: string | Buffer }[], name: string, url: string) {
     return new Promise<void>((resolve, reject) => {
       try {
-        let oReq = new XMLHttpRequest();
+        const oReq = new XMLHttpRequest();
         oReq.open("GET", url, true);
         oReq.responseType = "blob";
         oReq.onload = async () => {
           const blob = new Blob([oReq.response], { type: "image/png" });
-          let buffer = this.toBuffer(await blob.arrayBuffer());
+          const buffer = this.toBuffer(await blob.arrayBuffer());
           files.push({ name: name, contents: buffer });
           resolve();
         };
         oReq.send();
-      } catch(e) {
-        console.log(e)
+      } catch (e) {
+        console.log(e);
         reject(new DOMException("Could not download image."));
       }
     });
   }
 
   static toBuffer(ab: ArrayBuffer) {
-    let buffer = Buffer.alloc(ab.byteLength);
-    let view = new Uint8Array(ab);
+    const buffer = Buffer.alloc(ab.byteLength);
+    const view = new Uint8Array(ab);
     for (let i = 0; i < buffer.length; ++i) buffer[i] = view[i];
     return buffer;
   }
 
   static async getCsv(files: FileList, fileName: string) {
-    let file = this.getFile(files, fileName);
+    const file = this.getFile(files, fileName);
     if (file !== null) return await this.readCsv(file);
     else return null;
   }
 
   static readCsvString(csv: string) {
-    let result = [];
-    let data = Papa.parse(csv, { header: true,
-      transformHeader:function(h) {
+    const result = [];
+    const data = Papa.parse(csv, {
+      header: true,
+      transformHeader: function(h) {
         return h.trim();
-      } });
+      }
+    });
     for (let i = 0; i < data.data.length; i++) {
-      let r: any = this.getStrippedRecord(data.data[i]);
+      const r: any = this.getStrippedRecord(data.data[i]);
       result.push(r);
     }
     return result;
@@ -66,12 +68,12 @@ export class UploadHelper {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
       reader.onload = () => {
-        let result = [];
-        let csv = reader.result.toString();
-        let data = Papa.parse(csv, { header: true });
+        const result = [];
+        const csv = reader.result.toString();
+        const data = Papa.parse(csv, { header: true });
 
         for (let i = 0; i < data.data.length; i++) {
-          let r: any = this.getStrippedRecord(data.data[i]);
+          const r: any = this.getStrippedRecord(data.data[i]);
           result.push(r);
         }
         resolve(result);
@@ -85,13 +87,13 @@ export class UploadHelper {
   }
 
   static readXlsx(arrayBuffer: ArrayBuffer) {
-    let workbook = XLSX.read(arrayBuffer);
-    let worksheets = Object.values(workbook.Sheets)
-    let data: any = {};
-    let sheetNames = workbook.SheetNames;
+    const workbook = XLSX.read(arrayBuffer);
+    const worksheets = Object.values(workbook.Sheets);
+    const data: any = {};
+    const sheetNames = workbook.SheetNames;
     worksheets.forEach((sheet, i) => {
-      data[sheetNames[i]] = XLSX.utils.sheet_to_json(sheet, {header: 0});
-    })
+      data[sheetNames[i]] = XLSX.utils.sheet_to_json(sheet, { header: 0 });
+    });
     return data;
   }
 
@@ -104,19 +106,19 @@ export class UploadHelper {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => { resolve(reader.result.toString()); };
-      reader.onerror = () => { reject(new DOMException("Error reading image")) }
+      reader.onerror = () => { reject(new DOMException("Error reading image")); };
       reader.readAsArrayBuffer(file);
     });
   }
 
   static readImage(files: FileList, photoUrl: string) {
     return new Promise<string>((resolve, reject) => {
-      let match = false;
+      const match = false;
       for (let i = 0; i < files.length; i++) {
         if (files[i].name === photoUrl) {
           const reader = new FileReader();
           reader.onload = () => { resolve(reader.result.toString()); };
-          reader.onerror = () => { reject(new DOMException("Error reading image")) }
+          reader.onerror = () => { reject(new DOMException("Error reading image")); };
           reader.readAsDataURL(files[i]);
         }
       }
@@ -125,9 +127,9 @@ export class UploadHelper {
   }
 
   static getStrippedRecord(r: any) {
-    let names = Object.getOwnPropertyNames(r)
+    const names = Object.getOwnPropertyNames(r);
     for (let j = names.length - 1; j >= 0; j--) {
-      let n = names[j];
+      const n = names[j];
       if (r[n] === "") delete r[n];
     }
     return r;

@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Box, Typography, List, ListItem, ListItemIcon, ListItemText, Card, CardContent, Alert } from "@mui/material";
 import { CheckCircle, RadioButtonUnchecked, Error, Loop } from "@mui/icons-material";
 import { DataSourceType } from "../types";
@@ -15,21 +15,21 @@ export const TabRun = (props: Props) => {
     const status = props.status[name];
 
     let icon;
-    let color: any = 'text.secondary';
+    let color: any = "text.secondary";
 
     if (status === undefined) {
-      icon = <RadioButtonUnchecked sx={{ color: 'grey.400' }} />;
+      icon = <RadioButtonUnchecked sx={{ color: "grey.400" }} />;
     } else if (status === "error") {
-      icon = <Error sx={{ color: 'error.main' }} />;
-      color = 'error.main';
+      icon = <Error sx={{ color: "error.main" }} />;
+      color = "error.main";
     } else if (status.includes("running")) {
-      icon = <Loop sx={{ color: 'primary.main', animation: 'spin 1s linear infinite' }} />;
-      color = 'primary.main';
+      icon = <Loop sx={{ color: "primary.main", animation: "spin 1s linear infinite" }} />;
+      color = "primary.main";
     } else if (status === "complete") {
-      icon = <CheckCircle sx={{ color: 'success.main' }} />;
-      color = 'success.main';
+      icon = <CheckCircle sx={{ color: "success.main" }} />;
+      color = "success.main";
     } else {
-      icon = <RadioButtonUnchecked sx={{ color: 'grey.400' }} />;
+      icon = <RadioButtonUnchecked sx={{ color: "grey.400" }} />;
     }
 
     return (
@@ -41,33 +41,33 @@ export const TabRun = (props: Props) => {
           primary={name}
           sx={{
             color,
-            '& .MuiTypography-root': {
-              fontWeight: status === 'running' ? 600 : 400
-            }
+            "& .MuiTypography-root": { fontWeight: status === "running" ? 600 : 400 }
           }}
         />
       </ListItem>
     );
-  }
+  };
 
   const getExportSteps = () => {
     if (!props.isExporting) return null;
 
-    let steps = ["Campuses/Services/Times", "People", "Photos", "Groups", "Group Members", "Donations", "Attendance", "Forms", "Questions", "Answers", "Form Submissions", "Compressing"];
-    if (props.dataExportSource === DataSourceType.B1_DB) steps = steps.filter(s => s !== "Compressing")
-    let stepsHtml: React.ReactElement[] = [];
+    let steps = [
+      "Campuses/Services/Times", "People", "Photos", "Groups", "Group Members", "Donations", "Attendance", "Forms", "Questions", "Answers", "Form Submissions", "Compressing"
+    ];
+    if (props.dataExportSource === DataSourceType.B1_DB) steps = steps.filter(s => s !== "Compressing");
+    const stepsHtml: React.ReactElement[] = [];
     steps.forEach((s) => stepsHtml.push(getProgress(s)));
 
     return (
       <Card sx={{ mt: 3 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom color="primary" sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" gutterBottom color="primary" sx={{ display: "flex", alignItems: "center", mb: 2 }}>
             Export Progress
           </Typography>
           <Typography variant="body2" color="text.secondary" paragraph>
             Exporting content:
           </Typography>
-          <List dense sx={{ bgcolor: 'background.paper' }}>
+          <List dense sx={{ bgcolor: "background.paper" }}>
             {stepsHtml}
           </List>
           <Alert severity="info" sx={{ mt: 2 }}>
@@ -76,11 +76,11 @@ export const TabRun = (props: Props) => {
         </CardContent>
       </Card>
     );
-  }
+  };
 
   return (
     <Box>
-      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'primary.main', mb: 3 }}>
+      <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, color: "primary.main", mb: 3 }}>
         Step 4 - Export Progress
       </Typography>
 
@@ -92,5 +92,5 @@ export const TabRun = (props: Props) => {
 
       {props.dataExportSource && props.isExporting && getExportSteps()}
     </Box>
-  )
-}
+  );
+};

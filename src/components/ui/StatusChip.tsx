@@ -1,5 +1,5 @@
-import React from 'react';
-import { Chip } from '@mui/material';
+import React from "react";
+import { Chip } from "@mui/material";
 
 interface StatusChipProps {
   status: string;
@@ -15,21 +15,21 @@ export const StatusChip: React.FC<StatusChipProps> = ({
   const getStatusColor = (status: string) => {
     const normalizedStatus = status.toLowerCase();
 
-    if (normalizedStatus.includes('member') || normalizedStatus.includes('active') || normalizedStatus.includes('complete')) {
+    if (normalizedStatus.includes("member") || normalizedStatus.includes("active") || normalizedStatus.includes("complete")) {
       return {
         backgroundColor: "#e8f5e9",
         color: "#2e7d32"
       };
     }
 
-    if (normalizedStatus.includes('visitor') || normalizedStatus.includes('pending') || normalizedStatus.includes('warning')) {
+    if (normalizedStatus.includes("visitor") || normalizedStatus.includes("pending") || normalizedStatus.includes("warning")) {
       return {
         backgroundColor: "#fff3e0",
         color: "#f57c00"
       };
     }
 
-    if (normalizedStatus.includes('staff') || normalizedStatus.includes('admin') || normalizedStatus.includes('info')) {
+    if (normalizedStatus.includes("staff") || normalizedStatus.includes("admin") || normalizedStatus.includes("info")) {
       return {
         backgroundColor: "#e3f2fd",
         color: "#1565c0"
@@ -54,7 +54,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({
         sx={{
           backgroundColor: "rgba(255,255,255,0.2)",
           color: "#FFF",
-          fontSize: '0.75rem',
+          fontSize: "0.75rem",
           height: 20,
           fontWeight: 600
         }}
@@ -69,7 +69,7 @@ export const StatusChip: React.FC<StatusChipProps> = ({
       sx={{
         ...colors,
         fontWeight: 600,
-        fontSize: '0.75rem'
+        fontSize: "0.75rem"
       }}
     />
   );

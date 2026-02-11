@@ -6,7 +6,7 @@ import { ImportGroupInterface, ImportPersonInterface, ImportDonationBatchInterfa
 interface Props { importData: ImportDataInterface, triggerRender: number }
 
 export const ImportPreview: React.FC<Props> = React.memo((props) => {
-  const [activeTab, setActiveTab] = React.useState('people');
+  const [activeTab, setActiveTab] = React.useState("people");
 
   const handleTabChange = useCallback((_event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -46,14 +46,16 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
   }, [props.importData.households, props.importData.people]);
 
   const getPeopleTable = useMemo(() => {
-    if (props.importData.households.length === 0) return (
-      <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
-        <Typography variant="body1">No people will be imported</Typography>
-      </Box>
-    );
+    if (props.importData.households.length === 0) {
+      return (
+        <Box sx={{ textAlign: "center", py: 8, color: "text.secondary" }}>
+          <Typography variant="body1">No people will be imported</Typography>
+        </Box>
+      );
+    }
 
     return (
-      <TableContainer sx={{ bgcolor: 'background.paper' }}>
+      <TableContainer sx={{ bgcolor: "background.paper" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -74,11 +76,13 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
   }, [props.importData.groupMembers]);
 
   const getGroupsTable = useMemo(() => {
-    if (props.importData.groups.length === 0) return (
-      <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
-        <Typography variant="body1">No groups will be imported</Typography>
-      </Box>
-    );
+    if (props.importData.groups.length === 0) {
+      return (
+        <Box sx={{ textAlign: "center", py: 8, color: "text.secondary" }}>
+          <Typography variant="body1">No groups will be imported</Typography>
+        </Box>
+      );
+    }
 
     const rows = [];
 
@@ -129,7 +133,7 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
     }
 
     return (
-      <TableContainer sx={{ bgcolor: 'background.paper' }}>
+      <TableContainer sx={{ bgcolor: "background.paper" }}>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -148,11 +152,13 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
   }, [props.importData.groups, props.importData.campuses, props.importData.services, props.importData.serviceTimes, props.importData.groupServiceTimes, getMemberCount]);
 
   const getAttendanceTable = useMemo(() => {
-    if (props.importData.sessions.length === 0) return (
-      <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
-        <Typography variant="body1">No attendance records will be imported</Typography>
-      </Box>
-    );
+    if (props.importData.sessions.length === 0) {
+      return (
+        <Box sx={{ textAlign: "center", py: 8, color: "text.secondary" }}>
+          <Typography variant="body1">No attendance records will be imported</Typography>
+        </Box>
+      );
+    }
 
     const rows = props.importData.sessions.map((session, index) => {
       const group: ImportGroupInterface = ImportHelper.getByImportKey(props.importData.groups, session.groupKey);
@@ -168,7 +174,7 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
     });
 
     return (
-      <TableContainer sx={{ bgcolor: 'background.paper' }}>
+      <TableContainer sx={{ bgcolor: "background.paper" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -184,11 +190,13 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
   }, [props.importData.sessions, props.importData.groups, props.importData.visitSessions]);
 
   const getDonationsTable = useMemo(() => {
-    if (props.importData.donations.length === 0) return (
-      <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
-        <Typography variant="body1">No donations will be imported</Typography>
-      </Box>
-    );
+    if (props.importData.donations.length === 0) {
+      return (
+        <Box sx={{ textAlign: "center", py: 8, color: "text.secondary" }}>
+          <Typography variant="body1">No donations will be imported</Typography>
+        </Box>
+      );
+    }
 
     const rows = props.importData.donations.map((donation, index) => {
       const batch: ImportDonationBatchInterface = ImportHelper.getByImportKey(props.importData.batches, donation.batchKey);
@@ -208,7 +216,7 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
     });
 
     return (
-      <TableContainer sx={{ bgcolor: 'background.paper' }}>
+      <TableContainer sx={{ bgcolor: "background.paper" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -226,11 +234,13 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
   }, [props.importData.donations, props.importData.batches, props.importData.funds, props.importData.people]);
 
   const getFormsTable = useMemo(() => {
-    if (props.importData.forms.length === 0) return (
-      <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
-        <Typography variant="body1">No forms will be imported</Typography>
-      </Box>
-    );
+    if (props.importData.forms.length === 0) {
+      return (
+        <Box sx={{ textAlign: "center", py: 8, color: "text.secondary" }}>
+          <Typography variant="body1">No forms will be imported</Typography>
+        </Box>
+      );
+    }
 
     const rows = props.importData.forms.map((form, index) => (
       <TableRow key={`form-${form.importKey || form.name || index}`}>
@@ -240,7 +250,7 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
     ));
 
     return (
-      <TableContainer sx={{ bgcolor: 'background.paper' }}>
+      <TableContainer sx={{ bgcolor: "background.paper" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -254,45 +264,47 @@ export const ImportPreview: React.FC<Props> = React.memo((props) => {
     );
   }, [props.importData.forms]);
 
-  if (props.importData.people.length === 0) return (
-    <Alert severity="info">
-      <strong>Important:</strong> This tool is designed to help you load your initial data into the system. Using it after you have been using B1 for a while is risky and may result in duplicated data.
-    </Alert>
-  );
-  else return (
-    <Box>
-      {/* Tab Navigation */}
-      <Box sx={{
-        borderBottom: 1,
-        borderColor: 'divider',
-        mb: 2
-      }}>
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          <Tab label="People" value="people" />
-          <Tab label="Groups" value="groups" />
-          <Tab label="Attendance" value="attendance" />
-          <Tab label="Donations" value="donations" />
-          <Tab label="Forms" value="forms" />
-        </Tabs>
-      </Box>
+  if (props.importData.people.length === 0) {
+    return (
+      <Alert severity="info">
+        <strong>Important:</strong> This tool is designed to help you load your initial data into the system. Using it after you have been using B1 for a while is risky and may result in duplicated data.
+      </Alert>
+    );
+  } else {
+    return (
+      <Box>
+        {/* Tab Navigation */}
+        <Box sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          mb: 2
+        }}>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            <Tab label="People" value="people" />
+            <Tab label="Groups" value="groups" />
+            <Tab label="Attendance" value="attendance" />
+            <Tab label="Donations" value="donations" />
+            <Tab label="Forms" value="forms" />
+          </Tabs>
+        </Box>
 
-      {/* Tab Content - Tables Only */}
-      {activeTab === 'people' && getPeopleTable}
-      {activeTab === 'groups' && getGroupsTable}
-      {activeTab === 'attendance' && getAttendanceTable}
-      {activeTab === 'donations' && getDonationsTable}
-      {activeTab === 'forms' && getFormsTable}
-    </Box>
-  );
+        {/* Tab Content - Tables Only */}
+        {activeTab === "people" && getPeopleTable}
+        {activeTab === "groups" && getGroupsTable}
+        {activeTab === "attendance" && getAttendanceTable}
+        {activeTab === "donations" && getDonationsTable}
+        {activeTab === "forms" && getFormsTable}
+      </Box>
+    );
+  }
 }, (prevProps, nextProps) =>
   // Only re-render if the import data or triggerRender actually changes
   (
     prevProps.importData === nextProps.importData
     && prevProps.triggerRender === nextProps.triggerRender
-  )
-);
+  ));

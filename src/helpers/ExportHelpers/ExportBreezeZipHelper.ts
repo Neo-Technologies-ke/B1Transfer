@@ -10,67 +10,67 @@ import {
 
 const generateBreezeZip = async (importData: ImportDataInterface, updateProgress: (name: string, status: string) => void) => {
 
-  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
+  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
   const runImport = async (keyName: string, code: () => void) => {
     updateProgress(keyName, "running");
-    try{
+    try {
       await sleep(100);
       await code();
       updateProgress(keyName, "complete");
-    }catch(e){
+    } catch (_e) {
       updateProgress(keyName, "error");
     }
-  }
+  };
 
-  let files = [];
+  const files = [];
 
-  exportCampuses(importData, runImport)
+  exportCampuses(importData, runImport);
 
-  let peopleFileName = `people-${new Date().toISOString().split("T")[0]}.xlsx`;
-  let peopleData = await exportPeople(importData, runImport);
-  let peopleXlxsBuffer = DownloadHelper.createXlxs(peopleData)
+  const peopleFileName = `people-${new Date().toISOString().split("T")[0]}.xlsx`;
+  const peopleData = await exportPeople(importData, runImport);
+  const peopleXlxsBuffer = DownloadHelper.createXlxs(peopleData);
   files.push({ name: peopleFileName, contents: peopleXlxsBuffer });
 
   exportPhotos(importData.people, files, runImport);
 
-  let groupsFileName = `events-${new Date().toISOString().split("T")[0]}.xlsx`;
-  let eventData = await exportGroups(importData, runImport);
-  let eventXlxsBuffer = DownloadHelper.createXlxs(eventData)
+  const groupsFileName = `events-${new Date().toISOString().split("T")[0]}.xlsx`;
+  const eventData = await exportGroups(importData, runImport);
+  const eventXlxsBuffer = DownloadHelper.createXlxs(eventData);
   files.push({ name: groupsFileName, contents: eventXlxsBuffer });
 
-  let donationsFileName = `giving-${new Date().toISOString().split("T")[0]}.xlsx`;
-  let dontationData = await exportDonations(importData, runImport);
-  let donationXlxsBuffer = DownloadHelper.createXlxs(dontationData)
+  const donationsFileName = `giving-${new Date().toISOString().split("T")[0]}.xlsx`;
+  const dontationData = await exportDonations(importData, runImport);
+  const donationXlxsBuffer = DownloadHelper.createXlxs(dontationData);
   files.push({ name: donationsFileName, contents: donationXlxsBuffer });
 
-  exportAttendance(importData, runImport)
+  exportAttendance(importData, runImport);
 
-  exportForms(importData, runImport)
+  exportForms(importData, runImport);
 
   compressZip(files, runImport);
 
-}
+};
 const compressZip = async (files: {name: string, contents: any}[], runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Compressing", async () => {
     UploadHelper.zipFiles(files, "BreezeExport.zip");
   });
-}
+};
 const exportCampuses = async (_importData: ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
-  let data: any[] = [];
+  const data: any[] = [];
   await runImport("Campuses/Services/Times", async () => {
   });
   return data;
-}
+};
 
 const exportPeople = async (importData: ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   const { people } = importData;
-  let tmpHouseholds: ImportHouseholdInterface[] = [...importData.households];
-  let data: any[] = [];
+  const tmpHouseholds: ImportHouseholdInterface[] = [...importData.households];
+  const data: any[] = [];
   await runImport("People", async () => {
     people.forEach((p) => {
-      let household = tmpHouseholds.find(h => p.householdKey === h.importKey)
-      let row = {
+      const household = tmpHouseholds.find(h => p.householdKey === h.importKey);
+      const row = {
         "Breeze ID": p.importKey,
         "First Name": p.name.first,
         "Last Name": p.name.last,
@@ -99,31 +99,31 @@ const exportPeople = async (importData: ImportDataInterface, runImport: (keyName
         State: p.contactInfo.state,
         Zip: p.contactInfo.zip,
         "Added Date": ""
-      }
+      };
       data.push(row);
     });
   });
   return data;
 
-}
+};
 
 const exportGroups = async (importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
-  const {groups, groupServiceTimes} = importData;
-  let data: any[] = [];
+  const { groups, groupServiceTimes } = importData;
+  const data: any[] = [];
   await runImport("Groups", async () => {
     groups.forEach((g) => {
       let serviceTimeIds: string[] = [];
-      let gst: ImportGroupServiceTimeInterface[] = ArrayHelper.getAll(groupServiceTimes, "groupId", g.id);
+      const gst: ImportGroupServiceTimeInterface[] = ArrayHelper.getAll(groupServiceTimes, "groupId", g.id);
       if (gst.length === 0) serviceTimeIds = [""];
       else gst.forEach((time) => time?.serviceTimeId ? serviceTimeIds.push(time?.serviceTimeId?.toString()) : null );
       serviceTimeIds.forEach((_serviceTimeId) => {
-        let row = {
+        const row = {
           "Event ID": g.importKey,
           "Instance ID": g.id,
           Name: g.name,
           "Start Date": g.startDate,
           "End Date": g.endDate
-        }
+        };
         data.push(row);
       });
     });
@@ -135,11 +135,11 @@ const exportGroups = async (importData : ImportDataInterface, runImport: (keyNam
   });
 
   return data;
-}
+};
 
 const exportDonations = async (importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
-  const {batches, donations} = importData;
-  let data: any[] = [];
+  const { batches, donations } = importData;
+  const data: any[] = [];
 
   await runImport("Funds", async () => {
   });
@@ -149,8 +149,8 @@ const exportDonations = async (importData : ImportDataInterface, runImport: (key
 
   await runImport("Donations", async () => {
     donations.forEach((donation) => {
-      let batch: ImportDonationBatchInterface = ImportHelper.getByImportKey(batches, donation.batchKey);
-      let row = {
+      const batch: ImportDonationBatchInterface = ImportHelper.getByImportKey(batches, donation.batchKey);
+      const row = {
         Date: batch.batchDate,
         Batch: donation.batchKey,
         "Payment ID": "",
@@ -164,7 +164,7 @@ const exportDonations = async (importData : ImportDataInterface, runImport: (key
         "Check Number": "",
         Card: donation.methodDetails,
         Note: donation.notes
-      }
+      };
       data.push(row);
     });
   });
@@ -172,32 +172,32 @@ const exportDonations = async (importData : ImportDataInterface, runImport: (key
   await runImport("Donation Funds", async () => {
   });
   return data;
-}
+};
 
 const exportAttendance = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Attendance", async () => {
   });
-}
+};
 
 const exportForms = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Forms", async () => {
-  })
+  });
   await runImport("Questions", async () => {
-  })
+  });
   await runImport("Answers", async () => {
-  })
+  });
   await runImport("Form Submissions", async () => {
-  })
-}
+  });
+};
 
 const exportPhotos = async (people: PersonInterface[], files: { name: string, contents: string | Buffer }[], runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Photos", async () => {
-    let result: Promise<any>[] = [];
+    const result: Promise<any>[] = [];
     people.forEach(async (p) => {
       if (p.photoUpdated !== undefined) result.push(UploadHelper.downloadImageBytes(files, p.id.toString() + ".png", p.photo));
-    })
+    });
     Promise.all(result);
   });
-}
+};
 
 export default generateBreezeZip;

@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Stack, Typography, Paper, TableCell } from '@mui/material';
+import React, { ReactNode } from "react";
+import { Stack, Typography, Paper, TableCell } from "@mui/material";
 
 interface EmptyStateProps {
   icon: ReactNode;
@@ -23,7 +23,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {React.cloneElement(icon as React.ReactElement<any>, {
         sx: {
           fontSize: variant === "table" ? 48 : 64,
-          color: variant === "table" ? 'text.secondary' : 'grey.400'
+          color: variant === "table" ? "text.secondary" : "grey.400"
         }
       })}
       <Typography
@@ -34,7 +34,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         {title}
       </Typography>
       {description && (
-        <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', maxWidth: 400 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ textAlign: "center", maxWidth: 400 }}>
           {description}
         </Typography>
       )}
@@ -44,7 +44,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   if (variant === "table") {
     return (
-      <TableCell colSpan={colSpan} sx={{ textAlign: 'center' }}>
+      <TableCell colSpan={colSpan} sx={{ textAlign: "center" }}>
         {content}
       </TableCell>
     );
@@ -53,10 +53,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <Paper
       sx={{
-        textAlign: 'center',
-        backgroundColor: 'grey.50',
-        border: '1px dashed',
-        borderColor: 'grey.300',
+        textAlign: "center",
+        backgroundColor: "grey.50",
+        border: "1px dashed",
+        borderColor: "grey.300",
         borderRadius: 2
       }}
     >

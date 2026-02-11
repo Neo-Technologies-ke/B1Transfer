@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, CircularProgress, Typography, Stack } from '@mui/material';
+import React from "react";
+import { Box, CircularProgress, Typography, Stack } from "@mui/material";
 
 interface LoadingProps {
   size?: "sm" | "md" | "lg";
@@ -34,9 +34,9 @@ export const Loading: React.FC<LoadingProps> = ({
   if (center) {
     return (
       <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         py: 4
       }}>
         {content}

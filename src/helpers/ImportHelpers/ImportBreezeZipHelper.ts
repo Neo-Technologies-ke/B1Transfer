@@ -13,31 +13,31 @@ import { ContactInfoInterface, NameInterface } from "..";
 
 let people: ImportPersonInterface[] = [];
 let households: ImportHouseholdInterface[] = [];
-let campuses: ImportCampusInterface[] = [];
-let services: ImportServiceInterface[] = [];
-let serviceTimes: ImportServiceTimeInterface[] = [];
-let groupServiceTimes: ImportGroupServiceTimeInterface[] = [];
+const campuses: ImportCampusInterface[] = [];
+const services: ImportServiceInterface[] = [];
+const serviceTimes: ImportServiceTimeInterface[] = [];
+const groupServiceTimes: ImportGroupServiceTimeInterface[] = [];
 let groups: ImportGroupInterface[] = [];
 let groupMembers: ImportGroupMemberInterface[] = [];
-let sessions: ImportSessionInterface[] = [];
-let visits: ImportVisitInterface[] = [];
-let visitSessions: ImportVisitSessionInterface[] = [];
+const sessions: ImportSessionInterface[] = [];
+const visits: ImportVisitInterface[] = [];
+const visitSessions: ImportVisitSessionInterface[] = [];
 let batches: ImportDonationBatchInterface[] = [];
 let funds: ImportFundInterface[] = [];
 let donations: ImportDonationInterface[] = [];
 let fundDonations: ImportFundDonationInterface[] = [];
-let forms: ImportFormsInterface[] = [];
-let questions: ImportQuestionsInterface[] = [];
-let formSubmissions: ImportFormSubmissions[] = [];
-let answers: ImportAnswerInterface[] = [];
+const forms: ImportFormsInterface[] = [];
+const questions: ImportQuestionsInterface[] = [];
+const formSubmissions: ImportFormSubmissions[] = [];
+const answers: ImportAnswerInterface[] = [];
 
 const readBreezeZip = async (file: File): Promise<ImportDataInterface> => {
   const zip = await JSZip.loadAsync(file);
   const fileNames = Object.keys(zip.files);
-  const peopleFile = fileNames.find(name => name.match("people"))
-  const tagsFile = fileNames.find(name => name.match("tags"))
+  const peopleFile = fileNames.find(name => name.match("people"));
+  const tagsFile = fileNames.find(name => name.match("tags"));
   //const notesFile = fileNames.find(name => name.match("notes"))
-  const givingFile = fileNames.find(name => name.match("giving"))
+  const givingFile = fileNames.find(name => name.match("giving"));
   //const eventsFile = fileNames.find(name => name.match("events"))
 
   loadPeople(UploadHelper.readXlsx(await zip.file(peopleFile).async("arraybuffer")));
@@ -67,22 +67,22 @@ const readBreezeZip = async (file: File): Promise<ImportDataInterface> => {
     answers: answers
   } as ImportDataInterface;
 
-}
+};
 
 const loadGroups = (data: any) => {
   groups = [];
   groupMembers = [];
-  const xlsGroups = Object.keys(data)
+  const xlsGroups = Object.keys(data);
   xlsGroups.forEach((groupName, i) => {
     getOrCreateGroup(groups, { importKey: i.toString(), serviceTimeKey: null, startDate: null, endDate: null, name: groupName } as ImportGroupInterface);
-    let members = data[groupName];
+    const members = data[groupName];
     members.forEach((member: any) => {
-      let groupMember = { groupKey: i.toString(), personKey: member["Person ID"], groupId: i.toString(), personId: member["Person ID"] } as ImportGroupMemberInterface;
-      groupMembers.push(groupMember)
-    })
-  })
+      const groupMember = { groupKey: i.toString(), personKey: member["Person ID"], groupId: i.toString(), personId: member["Person ID"] } as ImportGroupMemberInterface;
+      groupMembers.push(groupMember);
+    });
+  });
   return groups;
-}
+};
 
 const getOrCreateGroup = (groups: ImportGroupInterface[], data: ImportGroupInterface) => {
   let result = groups.find(g => g.importKey === data.importKey);
@@ -95,7 +95,7 @@ const getOrCreateGroup = (groups: ImportGroupInterface[], data: ImportGroupInter
     groups.push(result);
   }
   return result;
-}
+};
 
 const loadDonations = (data: any) => {
   batches = [];
@@ -103,31 +103,31 @@ const loadDonations = (data: any) => {
   funds = [];
   fundDonations = [];
   for (let i = 0; i < data["Total Contributions"].length; i++) {
-    let d = data["Total Contributions"][i];
+    const d = data["Total Contributions"][i];
     if (d.Amount !== undefined) {
-      let batch = ImportHelper.getOrCreateBatch(batches, d.Batch, new Date(d.Date));
-      let fund = ImportHelper.getOrCreateFund(funds, d["Fund(s)"]);
-      let donation = { importKey: (donations.length + 1).toString(), batchKey: batch.importKey, personKey: d["Person ID"], personId: d["Person ID"], donationDate: new Date(d.Date), amount: Number.parseFloat(d.Amount), method: d["Method ID"], notes: d.Note ?? "", fund: fund, fundKey: fund.importKey } as ImportDonationInterface;
-      donation.person = people.find(p => p.importKey === donation.personKey)
-      let fundDonation = { donationKey: donation.importKey, fundKey: fund.importKey, amount: Number.parseFloat(d.Amount) } as ImportFundDonationInterface;
+      const batch = ImportHelper.getOrCreateBatch(batches, d.Batch, new Date(d.Date));
+      const fund = ImportHelper.getOrCreateFund(funds, d["Fund(s)"]);
+      const donation = { importKey: (donations.length + 1).toString(), batchKey: batch.importKey, personKey: d["Person ID"], personId: d["Person ID"], donationDate: new Date(d.Date), amount: Number.parseFloat(d.Amount), method: d["Method ID"], notes: d.Note ?? "", fund: fund, fundKey: fund.importKey } as ImportDonationInterface;
+      donation.person = people.find(p => p.importKey === donation.personKey);
+      const fundDonation = { donationKey: donation.importKey, fundKey: fund.importKey, amount: Number.parseFloat(d.Amount) } as ImportFundDonationInterface;
       donations.push(donation);
       fundDonations.push(fundDonation);
     }
   }
-}
+};
 
 const assignHousehold = (households: ImportHouseholdInterface[], person: ImportPersonInterface) => {
-  let householdName: string = person.name.last ?? "";
+  const householdName: string = person.name.last ?? "";
   if (households.length === 0 || households[households.length - 1].name !== householdName) {
     households.push({ name: householdName, importKey: (households.length + 1).toString() } as ImportHouseholdInterface);
   }
   person.householdKey = households[households.length - 1].importKey;
-}
+};
 
 const loadPeople = (data: any) => {
   people = [];
   households = [];
-  const xlssheets = Object.keys(data)
+  const xlssheets = Object.keys(data);
   xlssheets.forEach(sheet => {
     for (let i = 0; i < data[sheet].length; i++) {
       if (data[sheet][i]["Last Name"] !== undefined) {
@@ -148,8 +148,8 @@ const loadPeople = (data: any) => {
         people.push(p);
       }
     }
-  })
+  });
   return people;
-}
+};
 
 export default readBreezeZip;

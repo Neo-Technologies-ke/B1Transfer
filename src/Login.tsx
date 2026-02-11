@@ -9,7 +9,7 @@ import { EnvironmentHelper } from "./helpers";
 import { Box } from "@mui/material";
 
 export const Login: React.FC = () => {
-  const [errors] = React.useState<string[]>([])
+  const [errors] = React.useState<string[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const context = React.useContext(UserContext);
@@ -24,11 +24,11 @@ export const Login: React.FC = () => {
 
   const postChurchRegister = async (_church: ChurchInterface) => {
     if (EnvironmentHelper.Common.GoogleAnalyticsTag !== "") ReactGA.event({ category: "Church", action: "Register" });
-  }
+  };
 
   const trackUserRegister = async (_user: UserInterface) => {
     if (EnvironmentHelper.Common.GoogleAnalyticsTag !== "") ReactGA.event({ category: "User", action: "Register" });
-  }
+  };
 
   let jwt = search.get("jwt") || cookies.jwt;
   let auth = search.get("auth");
@@ -40,13 +40,13 @@ export const Login: React.FC = () => {
       sx={{
         display: "flex",
         backgroundColor: "#EEE",
-        minHeight: "100vh",
+        minHeight: "100vh"
       }}
     >
       <Box
         sx={{
           marginLeft: "auto",
-          marginRight: "auto",
+          marginRight: "auto"
         }}
       >
         <LoginPage

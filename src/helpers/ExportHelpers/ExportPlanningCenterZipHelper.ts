@@ -3,70 +3,70 @@ import { ImportDataInterface, ImportHouseholdInterface } from "../ImportHelper";
 import Papa from "papaparse";
 
 const generatePlanningCenterZip = async (importData: ImportDataInterface, updateProgress: (name: string, status: string) => void) => {
-  let files: { name: string, contents: any }[] = [];
+  const files: { name: string, contents: any }[] = [];
 
-  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
+  const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
   const runImport = async (keyName: string, code: () => void) => {
     updateProgress(keyName, "running");
-    try{
+    try {
       await sleep(100);
       await code();
       updateProgress(keyName, "complete");
-    }catch(e){
+    } catch (_e) {
       updateProgress(keyName, "error");
     }
-  }
+  };
 
-  exportCampuses(importData, runImport)
+  exportCampuses(importData, runImport);
 
   files.push({ name: "people.csv", contents: await exportPeople(importData, runImport) });
 
   exportPhotos(files, runImport);
 
-  exportGroups(importData, runImport)
+  exportGroups(importData, runImport);
 
-  exportGroupMembers(importData, runImport)
+  exportGroupMembers(importData, runImport);
 
-  exportDonations(importData, runImport)
+  exportDonations(importData, runImport);
 
-  exportAttendance(importData, runImport)
+  exportAttendance(importData, runImport);
 
-  exportForms(importData, runImport)
+  exportForms(importData, runImport);
 
-  exportQuestions(importData, runImport)
+  exportQuestions(importData, runImport);
 
-  exportFormSubmissions(importData, runImport)
+  exportFormSubmissions(importData, runImport);
 
-  exportAnswers(importData, runImport)
+  exportAnswers(importData, runImport);
 
   compressZip(files, runImport);
-}
+};
 
 const exportCampuses = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Campuses/Services/Times", async () => {
   });
-}
+};
 
-const exportGroupMembers = async (_importData : ImportDataInterface,runImport: (keyName: string, code: () => void) => Promise<void>) => {
+const exportGroupMembers = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Group Members", async () => {
   });
-}
+};
 
 const compressZip = async (files: {name: string, contents: any}[], runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Compressing", async () => {
     UploadHelper.zipFiles(files, "PlanningCenterExport.zip");
   });
-}
+};
 
 const exportPeople = async (importData: ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   const { people } = importData;
-  let tmpHouseholds: ImportHouseholdInterface[] = [...importData.households];
-  let data: any[] = [];
+  const tmpHouseholds: ImportHouseholdInterface[] = [...importData.households];
+  const data: any[] = [];
   await runImport("People", async () => {
     people.forEach((p) => {
-      let household = tmpHouseholds.find(h => p.householdKey === h.importKey)
-      let row = {
+      const household = tmpHouseholds.find(h => p.householdKey === h.importKey);
+      const row = {
         "Person ID": p.importKey ?? "",
         "Name Prefix": p.name.title ?? "",
         "Given Name": p.name.first ?? "",
@@ -127,12 +127,12 @@ const exportPeople = async (importData: ImportDataInterface, runImport: (keyName
         "Background Check Note": "",
         "Created At": "",
         "Updated At": ""
-      }
+      };
       data.push(row);
     });
   });
-  return Papa.unparse(data)
-}
+  return Papa.unparse(data);
+};
 
 const exportGroups = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
 
@@ -141,7 +141,7 @@ const exportGroups = async (_importData : ImportDataInterface, runImport: (keyNa
   });
   await runImport("Group Service Times", async () => {
   });
-}
+};
 
 const exportDonations = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
 
@@ -156,33 +156,33 @@ const exportDonations = async (_importData : ImportDataInterface, runImport: (ke
 
   await runImport("Donation Funds", async () => {
   });
-}
+};
 
 const exportAttendance = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Attendance", async () => {
   });
-}
+};
 
 const exportForms = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Forms", async () => {
-  })
-}
+  });
+};
 const exportQuestions = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Questions", async () => {
-  })
-}
+  });
+};
 const exportAnswers = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Answers", async () => {
-  })
-}
+  });
+};
 const exportFormSubmissions = async (_importData : ImportDataInterface, runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Form Submissions", async () => {
-  })
-}
+  });
+};
 
 const exportPhotos = async (_files: { name: string, contents: string | Buffer }[], runImport: (keyName: string, code: () => void) => Promise<void>) => {
   await runImport("Photos", async () => {
   });
-}
+};
 
 export default generatePlanningCenterZip;
