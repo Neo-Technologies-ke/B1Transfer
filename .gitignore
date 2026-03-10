@@ -105,3 +105,15 @@ dist
 
 # TernJS port file
 .tern-port
+
+# VPS Deployment - Sensitive Files (DO NOT COMMIT)
+.env.demo
+.env.staging
+.env.production
+*_DEPLOYMENT*.md
+DEPLOYMENT_*.md
+VPS_*.md
+docker-compose*.yml
+nginx-configs/
+deployment-package/
+*.sh
