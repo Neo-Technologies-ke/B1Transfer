@@ -106,7 +106,7 @@ const exportPeople = async (exportData: ImportDataInterface, runImport: (keyName
   const tmpHouseholds: ImportHouseholdInterface[] = [...exportData.households];
 
   tmpPeople.forEach((p) => {
-    if (p.birthDate !== undefined) p.birthDate = new Date(p.birthDate);
+    if (p.birthDate !== undefined) p.birthDate = new Date(p.birthDate).toISOString();
   });
 
   await runImport("Households", async () => {

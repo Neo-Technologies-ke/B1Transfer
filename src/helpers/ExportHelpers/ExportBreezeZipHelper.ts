@@ -81,7 +81,7 @@ const exportPeople = async (importData: ImportDataInterface, runImport: (keyName
         Status: p.membershipStatus,
         "Marital Status": p.maritalStatus,
         Birthdate: p.birthDate,
-        "Birthdate Month/Day": new Date(p.birthDate).getMonth() + "/" + new Date(p.birthDate).getDay(),
+        "Birthdate Month/Day": p.birthDate ? new Date(p.birthDate).getMonth() + "/" + new Date(p.birthDate).getDay() : "",
         Age: PersonHelper.calculateAge(p.birthDate),
         Family: household.name ?? p.name.last,
         "Family Role": p.householdRole,

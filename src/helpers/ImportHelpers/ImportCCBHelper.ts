@@ -169,7 +169,7 @@ const loadDonations = (data: any[], people: ImportPersonInterface[], batches: Im
       batchKey: batch.importKey,
       personKey: personKey,
       personId: personKey,
-      donationDate: donationDate,
+      donationDate: donationDate.toISOString(),
       amount: amount,
       method: method,
       methodDetails: checkNumber,

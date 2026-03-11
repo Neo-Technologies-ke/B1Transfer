@@ -96,7 +96,7 @@ const loadDonations = (data: any, people: ImportPersonInterface[], batches: Impo
     if (d.Amount !== undefined) {
       const batch = ImportHelper.getOrCreateBatch(batches, d.Batch, new Date(d.Date));
       const fund = ImportHelper.getOrCreateFund(funds, d["Fund(s)"]);
-      const donation = { importKey: (donations.length + 1).toString(), batchKey: batch.importKey, personKey: d["Person ID"], personId: d["Person ID"], donationDate: new Date(d.Date), amount: Number.parseFloat(d.Amount), method: d["Method ID"], notes: d.Note ?? "", fund: fund, fundKey: fund.importKey } as ImportDonationInterface;
+      const donation = { importKey: (donations.length + 1).toString(), batchKey: batch.importKey, personKey: d["Person ID"], personId: d["Person ID"], donationDate: new Date(d.Date).toISOString(), amount: Number.parseFloat(d.Amount), method: d["Method ID"], notes: d.Note ?? "", fund: fund, fundKey: fund.importKey } as ImportDonationInterface;
       donation.person = people.find(p => p.importKey === donation.personKey);
       const fundDonation = { donationKey: donation.importKey, fundKey: fund.importKey, amount: Number.parseFloat(d.Amount) } as ImportFundDonationInterface;
       donations.push(donation);

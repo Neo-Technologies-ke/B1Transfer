@@ -79,7 +79,7 @@ export class ImportHelper {
   static getOrCreateBatch(batches: ImportDonationBatchInterface[], name: string, date: Date) {
     let result = ArrayHelper.getOne(batches, "name", name);
     if (result === null) {
-      result = { importKey: (batches.length + 1).toString(), name: name, batchDate: date } as ImportDonationBatchInterface;
+      result = { importKey: (batches.length + 1).toString(), name: name, batchDate: date.toISOString() } as ImportDonationBatchInterface;
       batches.push(result);
     }
     return result;

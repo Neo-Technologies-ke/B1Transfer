@@ -119,7 +119,7 @@ const loadDonations = (data: any) => {
         batchKey: batch.importKey,
         personKey: d.personKey,
         personId: d.personKey,
-        donationDate: new Date(d.date),
+        donationDate: new Date(d.date).toISOString(),
         amount: Number.parseFloat(d.amount),
         method: d.method,
         methodDetails: d.methodDetails,
