@@ -32,8 +32,9 @@ if [ -f "$PACKAGE_JSON" ]; then
         echo "✅ Package.json exports already updated"
     fi
 else
-    echo "❌ Could not find package.json at $PACKAGE_JSON"
-    exit 1
+    # cropperjs was hoisted to top-level node_modules; create a minimal package.json
+    echo '{"name":"cropperjs","exports":{"./dist/cropper.css":"./dist/cropper.css"}}' > "$PACKAGE_JSON"
+    echo "✅ Created package.json with CSS export (cropperjs was hoisted)"
 fi
 
 echo "🎉 Cropper fix applied successfully!"
