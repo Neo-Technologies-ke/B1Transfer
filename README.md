@@ -6,15 +6,15 @@ An import/export/conversion tool for B1
 
 ### 🤝 Help Support Us
 
-The only reason this program is free is because of the generous support from users. If you want to support us to keep this free, please head over to [ChurchApps](https://churchapps/partner) or [sponsor us on GitHub](https://github.com/sponsors/ChurchApps/). Thank you so much!
+The only reason this program is free is because of the generous support from users. If you want to support us to keep this free, please head over to [Life Reformation Centre](https://lifereformationcentre.org/support) or [sponsor us on GitHub](https://github.com/sponsors/Neo-Technologies-ke/). Thank you so much!
 
 ### 🏘️ Join the Community
 
-We have a great community for end-users on [Facebook](https://www.facebook.com/churchapps.org). It's a good way to ask questions, get tips and follow new updates. Come join us!
+We have a great community for end-users. It's a good way to ask questions, get tips and follow new updates. Contact us at info@lifereformationcentre.org to join!
 
 ### ⚠️ Report an Issue
 
-If you discover an issue or have a feature request, simply submit it to our [issues log](https://github.com/ChurchApps/ChurchAppsSupport/issues). Don't be shy, that's how the program gets better.
+If you discover an issue or have a feature request, simply submit it to our [issues log](https://github.com/Neo-Technologies-ke/Support/issues). Don't be shy, that's how the program gets better.
 
 ### 💬 Join us on Slack
 
