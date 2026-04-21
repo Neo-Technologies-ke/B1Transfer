@@ -20,14 +20,16 @@ COPY . .
 ARG BUILD_ENV=production
 ENV NODE_ENV=production
 
-# Copy the appropriate environment file
+# Copy the appropriate environment file and remove all others
+# so Vite (with NODE_ENV=production) doesn't load .env.production on top
 RUN if [ "$BUILD_ENV" = "demo" ]; then \
       cp .env.demo .env; \
     elif [ "$BUILD_ENV" = "staging" ]; then \
       cp .env.staging .env; \
     else \
       cp .env.production .env; \
-    fi
+    fi && \
+    rm -f .env.demo .env.staging .env.production .env.sample .env.local .env.*.local
 
 # Build Vite application
 RUN npm run build
