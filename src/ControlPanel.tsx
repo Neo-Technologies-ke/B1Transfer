@@ -12,8 +12,6 @@ import { EnvironmentHelper } from "./helpers";
 import { Home } from "./Home";
 
 export const ControlPanel = () => {
-  console.log("***CONTROL PANEL");
-
   const location = useLocation();
   if (EnvironmentHelper.Common.GoogleAnalyticsTag !== "") {
     ReactGA.initialize(EnvironmentHelper.Common.GoogleAnalyticsTag);
@@ -26,7 +24,6 @@ export const ControlPanel = () => {
   }, [location]);
 
   const user = React.useContext(UserContext).user; //to force rerender on login
-  console.log(user === null);
   //if (user === null) return null;
   return (
     <Routes>

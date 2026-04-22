@@ -29,8 +29,7 @@ export class UploadHelper {
           resolve();
         };
         oReq.send();
-      } catch (e) {
-        console.log(e);
+      } catch {
         reject(new DOMException("Could not download image."));
       }
     });

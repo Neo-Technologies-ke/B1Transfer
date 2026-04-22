@@ -8,9 +8,6 @@ export class EnvironmentHelper {
   //static GoogleAnalyticsTag = "";
 
   static init = async () => {
-    const stage = import.meta.env.VITE_STAGE;
-    console.log("STAGE IS", stage);
-
     // Set URLs from VITE_* env vars baked in at build time.
     // Do NOT call Common.init(stage) — it overwrites with ChurchApps defaults.
     EnvironmentHelper.Common.AttendanceApi = import.meta.env.VITE_ATTENDANCE_API || EnvironmentHelper.Common.AttendanceApi;
