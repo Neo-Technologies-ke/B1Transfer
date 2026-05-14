@@ -23,8 +23,7 @@ export const ControlPanel = () => {
     }
   }, [location]);
 
-  const _user = React.useContext(UserContext).user; //to force rerender on login
-  //if (user === null) return null;
+  React.useContext(UserContext); //to force rerender on login
   return (
     <Routes>
       <Route path="/logout" element={<Logout />} />
