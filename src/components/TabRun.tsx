@@ -6,6 +6,7 @@ import { DataSourceType } from "../types";
 interface Props {
   dataExportSource: string | null;
   isExporting: boolean;
+  exportError?: string | null;
   status: Record<string, string>;
   undoCount?: number;
   onUndo?: (onProgress?: (done: number, total: number) => void) => Promise<void>;
@@ -111,12 +112,14 @@ export const TabRun = (props: Props) => {
       if (s === "complete") completed++;
       else if (s === "error") errors++;
     }
-    const allDone = steps.every(step => {
-      const s = props.status[step];
-      return s === "complete" || s === "error";
-    });
+    const allDone = props.exportError
+      ? true
+      : steps.every(step => {
+        const s = props.status[step];
+        return s === "complete" || s === "error";
+      });
     return { completedCount: completed, errorCount: errors, isAllDone: allDone };
-  }, [props.status, steps]);
+  }, [props.status, props.exportError, steps]);
 
   const progressPercent = steps.length > 0 ? Math.round((completedCount / steps.length) * 100) : 0;
 
@@ -173,6 +176,11 @@ export const TabRun = (props: Props) => {
                 {completedCount} of {steps.length} steps completed successfully
                 {errorCount > 0 && `, ${errorCount} failed`}
               </Typography>
+              {props.exportError && (
+                <Alert severity="error" sx={{ mb: 2, textAlign: "left" }}>
+                  {props.exportError}
+                </Alert>
+              )}
               {props.dataExportSource !== DataSourceType.B1_DB && errorCount === 0 && (
                 <Typography variant="body2" color="text.secondary">
                   Your file has been downloaded. Check your browser's downloads folder.
@@ -242,7 +250,7 @@ export const TabRun = (props: Props) => {
         Track each step as your data is processed.
       </Typography>
 
-      {!props.isExporting && (
+      {!props.isExporting && !props.exportError && (
         <Alert severity="info">
           The transfer will begin once you choose a destination on the previous step.
         </Alert>

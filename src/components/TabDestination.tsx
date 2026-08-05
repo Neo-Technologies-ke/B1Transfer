@@ -31,6 +31,8 @@ interface Props {
   setDataExportSource: (src: string | null) => void
   setStatus: (status: Record<string, string>) => void
   setIsExporting: (exporting: boolean) => void;
+  exportError: string | null;
+  setExportError: (error: string | null) => void;
   showFinalCount: boolean;
   setShowFinalCount: (showing: boolean) => void;
   exportCategories: ExportCategoriesInterface;
@@ -43,7 +45,6 @@ export const TabDestination = (props: Props) => {
   const context = React.useContext(UserContext);
   const [b1Data, setB1Data] = useState<ImportDataInterface>();
   const [loginError, setLoginError] = useState<boolean>(false);
-  const [exportError, setExportError] = useState<string | null>(null);
   const progress: any = {};
 
   const setProgress = (name: string, status: string) => {
@@ -58,7 +59,7 @@ export const TabDestination = (props: Props) => {
 
   const handleSelect = (e: string) => {
     setLoginError(false);
-    setExportError(null);
+    props.setExportError(null);
     if (e === DataSourceType.B1_DB && !context?.user) {
       setLoginError(true);
       return;
@@ -101,9 +102,9 @@ export const TabDestination = (props: Props) => {
   const isFileDestination = (type: string) => type !== DataSourceType.B1_DB;
 
   const handleExport = async (e: string) => {
-    setExportError(null);
+    props.setExportError(null);
     if (e === props.dataImportSource && !isFileDestination(e)) {
-      setExportError("Export source must be different than import source to avoid duplication of data.");
+      props.setExportError("Export source must be different than import source to avoid duplication of data.");
       return;
     } else {
       props.setIsExporting(true);
@@ -143,8 +144,7 @@ export const TabDestination = (props: Props) => {
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
-        setExportError(`Export failed: ${message}`);
-        props.setIsExporting(false);
+        props.setExportError(`Export failed: ${message}`);
       }
     }
   };
@@ -180,9 +180,9 @@ export const TabDestination = (props: Props) => {
         </Alert>
       )}
 
-      {exportError && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setExportError(null)}>
-          {exportError}
+      {props.exportError && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => props.setExportError(null)}>
+          {props.exportError}
         </Alert>
       )}
 

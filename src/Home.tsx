@@ -36,6 +36,7 @@ export const Home = () => {
 
   const [importData, setImportData] = useState<ImportDataInterface | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   const [status, setStatus] = useState<Record<string, string>>({});
   const [undoLog, setUndoLog] = useState<UndoEntry[]>([]);
@@ -59,6 +60,7 @@ export const Home = () => {
     setDataImportSource(null);
     setDataExportSource(null);
     setIsExporting(false);
+    setExportError(null);
     setStatus({});
     setUndoLog([]);
     setBatchId(undefined);
@@ -125,6 +127,8 @@ export const Home = () => {
                     dataExportSource={dataExportSource}
                     setDataExportSource={setDataExportSource}
                     setIsExporting={setIsExporting}
+                    exportError={exportError}
+                    setExportError={setExportError}
                     setStatus={setStatus}
                     showFinalCount={showFinalCount}
                     setShowFinalCount={setShowFinalCount}
@@ -135,7 +139,7 @@ export const Home = () => {
                   />
                 )}
                 {activeTab === "step4" && (
-                  <TabRun dataExportSource={dataExportSource} isExporting={isExporting} status={status} undoCount={undoLog.length} onUndo={handleUndo} batchId={batchId} />
+                  <TabRun dataExportSource={dataExportSource} isExporting={isExporting} exportError={exportError} status={status} undoCount={undoLog.length} onUndo={handleUndo} batchId={batchId} />
                 )}
               </ErrorBoundary>
             </CardContent>
